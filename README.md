@@ -7,6 +7,7 @@ The pipeline follows a **Medallion Architecture (Bronze, Silver, Gold)** using D
 
 The final outputs support key business insights, including **customer segmentation, product performance, and Customer Lifetime Value (CLV)**, demonstrating a scalable and production-ready data engineering solution.
 
+```text
                 ┌──────────────────────────────┐
                 │   Azure Data Lake Storage    │
                 │        (bronze-dev)          │
@@ -68,7 +69,8 @@ The final outputs support key business insights, including **customer segmentati
                 └──────────────────────────────┘
 
 ## Data Pipeline Flow
-1. Source Data Landing (ADLS - bronze-dev)
+```text
+  1. Source Data Landing (ADLS - bronze-dev)
    ├── customers_data
    ├── orders_data
    ├── products_data
@@ -115,7 +117,9 @@ The final outputs support key business insights, including **customer segmentati
    └── KPI tables
 
 11. Output / Consumption
-   └── Analytics / 
+   └── Analytics / Dashboard
+
+  
 
 
 
