@@ -128,66 +128,41 @@ Databricks, PySpark, Delta Lake, Databricks Volumes, Databricks Workflows, GitHu
 
 ## 🚀 Key Features
 
--  **Event-Driven Data Pipeline**
-  - Automatically triggers processing when a JSON file is uploaded to the `trigger_data` folder in ADLS.
-  - Eliminates manual intervention and enables real-time-like ingestion.
+- **Event-Driven Data Pipeline**
+  - Automatically triggers processing when a JSON file is uploaded to ADLS.
 
--  **End-to-End Automated Workflow (Databricks)**
-  - Fully orchestrated pipeline using Databricks Workflows.
-  - Handles ingestion → validation → transformation → loading seamlessly.
+- **End-to-End Automated Workflow**
+  - Orchestrated using Databricks Workflows.
 
--  **Parallel Data Processing**
-  - Independent datasets (customers, orders, products, inventory, shipping) are processed in parallel.
-  - Improves performance and reduces overall pipeline execution time.
+- **Parallel Data Processing**
+  - Multiple datasets processed simultaneously for better performance.
 
--  **Medallion Architecture (Bronze, Silver, Gold)**
-  - **Bronze**: Raw data ingestion (Delta tables)
-  - **Silver**: Data validation, cleansing, and quality checks
-  - **Gold**: Business-level aggregated tables for analytics
+- **Medallion Architecture (Bronze, Silver, Gold)**
+  - Structured data processing layers for scalability and reliability.
 
--  **Robust Data Validation Framework**
-  - Schema enforcement
-  - Null value checks
-  - Deduplication
-  - Cross-table consistency validation
-  - Data quality scoring
+- **Data Validation Framework**
+  - Schema checks, null handling, deduplication, and quality validation.
 
--  **Slowly Changing Dimension (SCD Type 2)**
-  - Maintains full historical tracking of data changes
-  - Implemented using Delta Lake `MERGE` operations
+- **SCD Type 2 Implementation**
+  - Maintains historical data of customer data using Delta Lake MERGE operations.
 
--  **Business Logic & Data Enrichment**
-  - Joins across multiple datasets
-  - Derived columns and calculated metrics
-  - Domain-specific transformations
+- **Analytics-Ready Gold Layer**
+  - Business KPIs, segmentation, and reporting tables.
 
--  **Analytics-Ready Gold Layer**
-  - Precomputed KPIs and metrics
-  - Customer segmentation
-  - Product performance insights
-  - Customer Lifetime Value (CLV)
+- **Scalable Cloud Architecture**
+  - Built using ADLS Gen2, Databricks, and Apache Spark.
 
--  **Scalable & Cloud-Native Architecture**
-  - Built on Azure Data Lake Storage Gen2 + Databricks
-  - Handles large-scale distributed data processing using Apache Spark
+- **Delta Lake Features**
+  - ACID transactions, schema evolution, and time travel.
 
--  **Reliable & ACID-Compliant Storage**
-  - Uses Delta Lake for:
-    - ACID transactions
-    - Schema evolution
-    - Time travel (data versioning)
 
--  **Modular & Extensible Design**
-  - Easy to add new datasets or pipelines
-  - Reusable ingestion and transformation components
-
-##  Data Model
+## 🧩 Data Model
 
 This project uses **Unity Catalog (`ecommerce_dev_catalog`)** with a layered architecture in the `default` schema.
 
 ---
 
-### 🟤 Stage Layer (Raw / Ingestion)
+###  Stage Layer (Raw / Ingestion)
 
 Raw data ingested directly from ADLS with minimal transformation.
 
@@ -199,7 +174,7 @@ Raw data ingested directly from ADLS with minimal transformation.
 
 ---
 
-### ⚪ Target Layer (Cleaned & Processed)
+###  Target Layer (Cleaned & Processed)
 
 Validated and transformed datasets used for downstream processing.
 
@@ -209,7 +184,7 @@ Validated and transformed datasets used for downstream processing.
 
 ---
 
-### 🔴 Error & Logging Layer
+###  Error & Logging Layer
 
 Captures failed records and pipeline execution details.
 
@@ -220,7 +195,7 @@ Captures failed records and pipeline execution details.
 
 ---
 
-### 🟡 Analytics Layer (Gold / Business Ready)
+###  Analytics Layer (Gold / Business Ready)
 
 Final business-level aggregated tables for reporting and dashboards.
 
@@ -230,6 +205,7 @@ Final business-level aggregated tables for reporting and dashboards.
 - segment_analysis  
 - seasonal_analysis  
 - analytics_summary  
+
 
 ---
 
