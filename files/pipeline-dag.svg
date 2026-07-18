@@ -1,0 +1,74 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1500' height='560' viewBox='0 0 1500 560'>
+<rect width='1500' height='560' fill='#fffef9'/>
+<path d='M 10.0 10.0 L 380.5 8.3 L 749.2 9.0 L 1120.9 10.6 L 1490.0 10.0 L 1490.0 10.0 L 1491.4 143.5 L 1489.7 278.3 L 1489.0 415.0 L 1490.0 550.0 L 1490.0 550.0 L 1118.3 548.9 L 750.5 550.2 L 379.0 550.3 L 10.0 550.0 L 10.0 550.0 L 11.1 413.2 L 11.1 280.7 L 9.4 143.8 L 10.0 10.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.3' opacity='0.35'/>
+<text x='40' y='42' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='22' fill='#1e1e1e' font-weight='bold'>the 8-notebook DAG (Databricks Jobs &amp; Pipelines)</text>
+<text x='40' y='64' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='13' fill='#495057'>five loaders run in parallel, then it's a strict relay: validate → enrich → merge</text>
+<g transform='rotate(0 170.0 131.0)'>
+<path d='M 60.0 100.0 L 117.0 99.3 L 168.2 98.2 L 226.5 100.5 L 280.0 100.0 L 280.0 100.0 L 281.4 116.5 L 280.2 133.1 L 279.5 146.7 L 280.0 162.0 L 280.0 162.0 L 226.4 162.5 L 171.6 162.3 L 115.9 160.0 L 60.0 162.0 L 60.0 162.0 L 58.8 145.6 L 58.2 129.8 L 58.2 114.5 L 60.0 100.0 ' fill='#a5d8ff' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 60.0 100.0 L 115.4 99.6 L 169.6 99.2 L 224.3 101.2 L 280.0 100.0 L 280.0 100.0 L 280.4 115.8 L 279.1 131.6 L 279.1 146.2 L 280.0 162.0 L 280.0 162.0 L 226.4 162.4 L 170.2 162.5 L 116.0 162.8 L 60.0 162.0 L 60.0 162.0 L 59.2 145.2 L 59.5 130.3 L 59.2 116.7 L 60.0 100.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='170.0' y='131.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11.5' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>01_orders_stage_load</text>
+</g>
+<g transform='rotate(0 170.0 213.0)'>
+<path d='M 60.0 182.0 L 116.7 181.2 L 170.7 181.5 L 226.8 181.8 L 280.0 182.0 L 280.0 182.0 L 279.0 196.4 L 280.3 212.0 L 280.4 230.3 L 280.0 244.0 L 280.0 244.0 L 224.6 242.8 L 172.2 244.0 L 113.2 242.0 L 60.0 244.0 L 60.0 244.0 L 58.3 229.1 L 61.3 212.7 L 58.1 197.0 L 60.0 182.0 ' fill='#b2f2bb' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 60.0 182.0 L 116.4 182.1 L 171.3 183.0 L 223.6 182.6 L 280.0 182.0 L 280.0 182.0 L 280.5 197.6 L 279.3 213.4 L 278.9 228.3 L 280.0 244.0 L 280.0 244.0 L 224.9 245.3 L 171.1 243.3 L 115.0 243.1 L 60.0 244.0 L 60.0 244.0 L 61.2 229.5 L 59.4 213.4 L 60.3 196.5 L 60.0 182.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='170.0' y='213.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11.5' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>02_customers_stage_load</text>
+</g>
+<g transform='rotate(0 170.0 295.0)'>
+<path d='M 60.0 264.0 L 116.2 264.2 L 171.2 264.1 L 222.8 263.2 L 280.0 264.0 L 280.0 264.0 L 277.9 281.4 L 281.7 296.5 L 279.2 308.6 L 280.0 326.0 L 280.0 326.0 L 226.7 328.0 L 168.2 325.9 L 113.1 327.1 L 60.0 326.0 L 60.0 326.0 L 61.2 308.9 L 59.9 295.2 L 59.0 281.1 L 60.0 264.0 ' fill='#ffd8a8' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 60.0 264.0 L 114.8 263.2 L 170.1 264.6 L 224.2 263.5 L 280.0 264.0 L 280.0 264.0 L 281.4 279.9 L 279.8 295.0 L 278.9 309.7 L 280.0 326.0 L 280.0 326.0 L 224.5 326.2 L 169.2 325.2 L 113.8 326.4 L 60.0 326.0 L 60.0 326.0 L 59.2 311.6 L 61.0 293.8 L 59.3 280.0 L 60.0 264.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='170.0' y='295.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11.5' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>03_products_stage_load</text>
+</g>
+<g transform='rotate(0 170.0 377.0)'>
+<path d='M 60.0 346.0 L 113.7 344.4 L 171.9 346.3 L 224.9 347.3 L 280.0 346.0 L 280.0 346.0 L 281.4 360.1 L 278.2 376.7 L 279.7 392.4 L 280.0 408.0 L 280.0 408.0 L 226.0 408.8 L 172.1 406.2 L 114.6 407.3 L 60.0 408.0 L 60.0 408.0 L 61.6 391.4 L 58.6 376.8 L 59.7 360.5 L 60.0 346.0 ' fill='#eebefa' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 60.0 346.0 L 114.3 347.2 L 169.8 347.0 L 225.1 344.7 L 280.0 346.0 L 280.0 346.0 L 281.4 362.4 L 281.3 378.2 L 281.0 391.6 L 280.0 408.0 L 280.0 408.0 L 225.0 407.2 L 169.7 406.8 L 114.7 409.4 L 60.0 408.0 L 60.0 408.0 L 59.3 393.3 L 59.9 376.8 L 61.3 362.9 L 60.0 346.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='170.0' y='377.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11.5' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>04_inventory_stage_load</text>
+</g>
+<g transform='rotate(0 170.0 459.0)'>
+<path d='M 60.0 428.0 L 115.2 429.0 L 168.5 427.1 L 227.1 428.3 L 280.0 428.0 L 280.0 428.0 L 280.2 444.6 L 278.1 459.4 L 280.0 476.1 L 280.0 490.0 L 280.0 490.0 L 223.5 492.0 L 168.2 488.6 L 115.4 490.8 L 60.0 490.0 L 60.0 490.0 L 58.8 472.8 L 61.7 457.9 L 60.4 444.0 L 60.0 428.0 ' fill='#ffc9c9' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 60.0 428.0 L 114.8 428.2 L 170.1 429.2 L 224.2 428.6 L 280.0 428.0 L 280.0 428.0 L 279.3 443.2 L 280.5 458.4 L 279.5 475.2 L 280.0 490.0 L 280.0 490.0 L 223.8 489.9 L 171.4 491.4 L 113.8 489.2 L 60.0 490.0 L 60.0 490.0 L 59.3 475.7 L 61.1 460.1 L 59.6 442.5 L 60.0 428.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='170.0' y='459.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11.5' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>05_shipping_stage_load</text>
+</g>
+<path d='M 284.0 131.0 L 301.7 164.6 L 317.2 198.5 L 333.8 227.4 L 350.9 261.4 L 366.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 366.0 295.0 L 358.5 290.0 M 366.0 295.0 L 366.5 286.0' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<path d='M 284.0 213.0 L 301.1 231.2 L 315.3 244.3 L 331.6 262.4 L 348.7 279.0 L 366.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 366.0 295.0 L 357.3 292.7 M 366.0 295.0 L 363.7 286.3' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<path d='M 284.0 295.0 L 301.3 293.8 L 317.3 294.1 L 333.2 296.6 L 351.0 293.4 L 366.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 366.0 295.0 L 358.2 299.5 M 366.0 295.0 L 358.2 290.5' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<path d='M 284.0 377.0 L 300.1 359.7 L 314.8 345.3 L 333.7 326.8 L 350.6 311.6 L 366.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 366.0 295.0 L 363.7 303.7 M 366.0 295.0 L 357.3 297.3' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<path d='M 284.0 459.0 L 300.1 424.2 L 315.1 394.9 L 334.8 360.8 L 350.9 328.1 L 366.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 366.0 295.0 L 366.5 304.0 M 366.0 295.0 L 358.5 300.0' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<g transform='rotate(0 485.0 295.0)'>
+<path d='M 380.0 250.0 L 431.0 248.4 L 484.2 251.8 L 538.8 251.6 L 590.0 250.0 L 590.0 250.0 L 591.8 271.2 L 588.9 293.3 L 591.2 319.2 L 590.0 340.0 L 590.0 340.0 L 537.1 340.5 L 483.5 341.9 L 434.1 342.1 L 380.0 340.0 L 380.0 340.0 L 381.4 319.2 L 377.9 296.0 L 379.3 274.4 L 380.0 250.0 ' fill='#ffe066' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 380.0 250.0 L 433.3 251.0 L 485.9 249.3 L 538.3 248.9 L 590.0 250.0 L 590.0 250.0 L 591.0 273.5 L 589.2 295.9 L 589.9 317.0 L 590.0 340.0 L 590.0 340.0 L 538.3 339.2 L 483.7 339.1 L 432.0 341.0 L 380.0 340.0 L 380.0 340.0 L 381.3 316.9 L 380.4 294.7 L 381.3 272.6 L 380.0 250.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='485.0' y='289.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='13' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>06_data_validation</text>
+<text x='485.0' y='332.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='10' fill='#495057' text-anchor='middle'>cross-reference + business rules</text>
+</g>
+<path d='M 594.0 295.0 L 610.2 293.5 L 624.7 293.7 L 639.1 294.1 L 650.0 294.7 L 666.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 666.0 295.0 L 658.2 299.5 M 666.0 295.0 L 658.2 290.5' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<g transform='rotate(0 775.0 295.0)'>
+<path d='M 670.0 250.0 L 723.5 249.2 L 775.5 250.1 L 827.0 250.3 L 880.0 250.0 L 880.0 250.0 L 878.9 273.4 L 877.8 296.9 L 880.2 318.5 L 880.0 340.0 L 880.0 340.0 L 828.6 340.8 L 774.4 338.1 L 723.2 339.3 L 670.0 340.0 L 670.0 340.0 L 669.2 319.0 L 671.0 294.1 L 669.2 272.1 L 670.0 250.0 ' fill='#96f2d7' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 670.0 250.0 L 722.2 249.4 L 774.0 249.8 L 828.7 250.5 L 880.0 250.0 L 880.0 250.0 L 881.1 272.8 L 879.4 295.1 L 878.6 316.9 L 880.0 340.0 L 880.0 340.0 L 827.3 340.2 L 775.4 339.9 L 722.3 339.2 L 670.0 340.0 L 670.0 340.0 L 669.9 318.6 L 670.8 294.1 L 668.8 272.5 L 670.0 250.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='775.0' y='289.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='13' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>07_data_enrichment</text>
+<text x='775.0' y='332.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='10' fill='#495057' text-anchor='middle'>joins + analytics tables</text>
+</g>
+<path d='M 884.0 295.0 L 898.9 294.3 L 914.1 296.0 L 927.9 293.9 L 940.4 293.1 L 956.0 295.0 ' fill='none' stroke='#1e1e1e' stroke-width='1.8'  stroke-linecap='round'/>
+<path d='M 956.0 295.0 L 948.2 299.5 M 956.0 295.0 L 948.2 290.5' fill='none' stroke='#1e1e1e' stroke-width='1.8' stroke-linecap='round'/>
+<g transform='rotate(0 1065.0 295.0)'>
+<path d='M 960.0 250.0 L 1011.4 249.9 L 1066.5 248.1 L 1117.1 250.6 L 1170.0 250.0 L 1170.0 250.0 L 1168.7 273.4 L 1170.0 293.9 L 1170.7 315.3 L 1170.0 340.0 L 1170.0 340.0 L 1118.6 341.2 L 1063.3 339.7 L 1011.1 342.0 L 960.0 340.0 L 960.0 340.0 L 960.1 315.5 L 958.9 296.5 L 959.8 273.8 L 960.0 250.0 ' fill='#ff8787' fill-opacity='0.9' stroke='#1e1e1e' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/>
+<path d='M 960.0 250.0 L 1013.0 251.4 L 1065.3 251.3 L 1118.6 250.3 L 1170.0 250.0 L 1170.0 250.0 L 1170.6 272.5 L 1170.9 295.1 L 1171.1 318.2 L 1170.0 340.0 L 1170.0 340.0 L 1117.4 339.3 L 1064.3 340.4 L 1013.2 340.1 L 960.0 340.0 L 960.0 340.0 L 960.4 316.9 L 958.8 294.4 L 959.4 272.0 L 960.0 250.0 ' fill='none' stroke='#1e1e1e' stroke-width='1' stroke-linejoin='round' stroke-linecap='round' opacity='0.5'/>
+<text x='1065.0' y='289.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='12.5' fill='#1e1e1e' text-anchor='middle' dominant-baseline='middle'>08_final_merge_operation</text>
+<text x='1065.0' y='332.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='10' fill='#495057' text-anchor='middle'>SCD2 merge into *_target</text>
+</g>
+<text x='60' y='520' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>each loader: read csv → schema validate → split valid/invalid → write stage table → archive file</text>
+<text x='380' y='395.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>orphan checks, price</text>
+<text x='380' y='410.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>mismatches, 3 business rules</text>
+<text x='670' y='395.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>enriched_orders,</text>
+<text x='670' y='410.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>customer_analytics,</text>
+<text x='670' y='425.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>product_analytics</text>
+<text x='960' y='395.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>orders/customers/products</text>
+<text x='960' y='410.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>_target + analytics_summary</text>
+<path d='M 60.0 460.0 L 337.6 459.0 L 614.2 460.5 L 893.1 458.8 L 1170.0 460.0 L 1170.0 460.0 L 1169.7 473.9 L 1169.8 486.7 L 1169.8 502.4 L 1170.0 515.0 L 1170.0 515.0 L 892.7 515.5 L 616.0 515.7 L 337.2 513.6 L 60.0 515.0 L 60.0 515.0 L 59.6 502.0 L 61.0 488.8 L 59.8 474.4 L 60.0 460.0 ' fill='#f1f3f5' stroke='#1e1e1e' stroke-width='1.2' stroke-dasharray='3,3'/>
+<text x='75' y='482.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='12' fill='#1e1e1e' font-weight='bold'>every single notebook writes a row to processing_log</text>
+<text x='75' y='500.0' font-family='Segoe Print, Bradley Hand, Comic Sans MS, cursive' font-size='11' fill='#495057'>task name, timestamp, total/valid/invalid record counts, SUCCESS or SUCCESS_WITH_WARNINGS</text>
+</svg>
