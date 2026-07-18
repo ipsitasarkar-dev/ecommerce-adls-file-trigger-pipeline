@@ -258,33 +258,33 @@ The image assets are stored alongside this README in `files/`, with additional v
 
 ### Architecture reference
 
-![event-driven architecture](architecture-diagram.svg)
+![event-driven architecture](./files/architecture-diagram.svg)
 
-![Azure portal reference](original-azure-diagram.jpg)
+![Azure portal reference](./files/original-azure-diagram.jpg)
 
-![alternative architecture sketch](../images/architecture_diagram.jpg)
+![alternative architecture sketch](./files/architecture_diagram.jpg)
 
 ### Pipeline flow and runtime
 
-![pipeline DAG](pipeline-dag.svg)
+![pipeline DAG](./files/pipeline-dag.svg)
 
-![Databricks job graph](databricks-job-graph.png)
+![Databricks job graph](./files/databricks-job-graph.png)
 
-![workflow visual](../images/worklflow.png)
+![workflow visual](./files/worklflow.png)
 
 ### Execution evidence
 
-![enrichment summary](analytics-summary-run.png)
+![enrichment summary](./files/analytics-summary-run.png)
 
-![final merge output](final-merge-run.png)
+![final merge output](./files/final-merge-run.png)
 
-![final output](../images/final_output.png)
+![final output](./files/final_output.png)
 
-![metric screenshot](../images/metric.png)
+![metric screenshot](./files/images/metric.png)
 
 ### Security and access
 
-![IAM role assignments](iam-role-assignments.jpeg)
+![IAM role assignments](./files/iam-role-assignments.jpeg)
 
 ---
 
