@@ -1,238 +1,339 @@
-# ecommerce-adls-file-trigger-pipeline
-##  Project Overview
+# ecommerce-incremental-load
 
-This project builds an **event-driven e-commerce data pipeline** on Databricks to process multi-source data such as orders, customers, products, inventory, and shipping. Data is ingested from Databricks Volumes and processed through automated workflows triggered by JSON-based events.
+A pragmatic event-driven data pipeline for ecommerce CSV feeds, built to run in Azure Databricks with Delta Lake staging, validation, enrichment, and SCD2 history.
 
-The pipeline follows a **Medallion Architecture (Bronze, Silver, Gold)** using Delta Lake, enabling structured data transformation from raw ingestion to analytics-ready datasets. It incorporates **data validation, SCD Type 2 for historical tracking**, and automated file management with logging and monitoring.
-
-The final outputs support key business insights, including **customer segmentation, product performance, and Customer Lifetime Value (CLV)**, demonstrating a scalable and production-ready data engineering solution.
-
-##   Tech Stack -
-
-Databricks, PySpark, Delta Lake, Databricks Volumes, Databricks Workflows, GitHub
-
-## Data Pipeline Flow
-
-```text
-                ┌──────────────────────────────┐
-                │   Azure Data Lake Storage    │
-                │        (bronze-dev)          │
-                │                              │
-                │  customers_data              │
-                │  orders_data                 │
-                │  products_data               │
-                │  inventory_data              │
-                │  shipping_data               │
-                │  trigger_data (JSON files)   │
-                └─────────────┬────────────────┘
-                              │
-                              │  (File Upload)
-                              ▼
-                ┌──────────────────────────────┐
-                │   Trigger Detection Logic    │
-                │ (JSON-based event trigger)   │
-                └─────────────┬────────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────┐
-                │   Databricks Workflows       │
-                │ (Job Orchestration Layer)    │
-                └─────────────┬────────────────┘
-                              │
-     ┌───────────────┬────────┼───────────────┬───────────────┐
-     ▼               ▼        ▼               ▼               ▼
-┌──────────┐  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
-│Customers │  │ Orders   │ │Products  │ │Inventory │ │Shipping  │
-│ Ingestion│  │ Ingestion│ │ Ingestion│ │ Ingestion│ │ Ingestion│
-└────┬─────┘  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘
-     └──────────────┴────────────┴────────────┴──────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────┐
-                │   Bronze Layer (Delta Lake)  │
-                │   Raw Tables                 │
-                └─────────────┬────────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────┐
-                │   Silver Layer               │
-                │ - Data Validation            │
-                │ - Schema Checks             │
-                │ - Cleaning                  │
-                └─────────────┬────────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────┐
-                │   Gold Layer                 │
-                │ - SCD Type 2                │
-                │ - Data Enrichment            │
-                │ - CLV / KPIs                │
-                └─────────────┬────────────────┘
-                              │
-                              ▼
-                ┌──────────────────────────────┐
-                │   Analytics / Dashboard      │
-                └──────────────────────────────┘
-```
-## Data Pipeline Flow
-```text
-  1. Source Data Landing (ADLS - bronze-dev)
-   ├── customers_data
-   ├── orders_data
-   ├── products_data
-   ├── inventory_data
-   ├── shipping_data
-
-2. Trigger Event
-   └── JSON file uploaded to trigger_data folder
-
-3. Event Detection
-   └── Databricks detects trigger file
-
-4. Workflow Execution
-   └── Databricks Workflow starts job
-
-5. Parallel Data Ingestion
-   ├── customers_stage_load
-   ├── orders_stage_load
-   ├── products_stage_load
-   ├── inventory_stage_load
-   ├── shipping_stage_load
-
-6. Bronze Layer (Raw Delta Tables)
-   └── Store raw ingested data
-
-7. Data Validation (Silver Layer)
-   ├── Schema validation
-   ├── Null checks
-   ├── Cross-table validation
-   └── Data quality scoring
-
-8. Data Transformation & Enrichment
-   ├── Join datasets
-   ├── Business rules
-   ├── Derived columns
-
-9. SCD Type 2 Processing
-   └── Delta MERGE (historical tracking)
-
-10. Gold Layer (Business Tables)
-   ├── Customer segmentation
-   ├── Product performance
-   ├── CLV calculation
-   └── KPI tables
-
-11. Output / Consumption
-   └── Analytics / Dashboard
-```
-
-## 🚀 Key Features
-
-- **Event-Driven Data Pipeline**
-  - Automatically triggers processing when a JSON file is uploaded to ADLS.
-
-- **End-to-End Automated Workflow**
-  - Orchestrated using Databricks Workflows.
-
-- **Parallel Data Processing**
-  - Multiple datasets processed simultaneously for better performance.
-
-- **Medallion Architecture (Bronze, Silver, Gold)**
-  - Structured data processing layers for scalability and reliability.
-
-- **Data Validation Framework**
-  - Schema checks, null handling, deduplication, and quality validation.
-
-- **SCD Type 2 Implementation**
-  - Maintains historical data of customer data using Delta Lake MERGE operations.
-
-- **Analytics-Ready Gold Layer**
-  - Business KPIs, segmentation, and reporting tables.
-
-- **Scalable Cloud Architecture**
-  - Built using ADLS Gen2, Databricks, and Apache Spark.
-
-- **Delta Lake Features**
-  - ACID transactions, schema evolution, and time travel.
-
-
-## 🧩 Data Model
-
-This project uses **Unity Catalog (`ecommerce_dev_catalog`)** with a layered architecture in the `default` schema.
+This repo is the handoff document for a pipeline that is meant to be run, observed, and debugged by another engineer. It is not marketing copy —it is a map of how the pipeline is wired, where data quality is enforced, and what to watch for after a run.
 
 ---
 
-###  Stage Layer (Raw / Ingestion)
+## What this repo is for
 
-Raw data ingested directly from ADLS with minimal transformation.
+It exists because raw ecommerce CSV feeds are arriving into Azure Blob Storage and those files need to be turned into analytics-ready tables without losing history.
 
-- customers_stage  
-- orders_stage  
-- products_stage  
-- inventory_stage  
-- shipping_stage  
+What it solves:
 
----
+- captures source data as soon as a file lands
+- isolates raw ingestion from business logic
+- validates cross-feed consistency before enrichment
+- preserves history with SCD2 instead of overwriting target rows
+- keeps failure evidence in Delta tables so bad rows are visible
 
-###  Target Layer (Cleaned & Processed)
-
-Validated and transformed datasets used for downstream processing.
-
-- customers_target  
-- orders_target  
-- enriched_orders  
+This is the kind of pipeline I would hand over with a “run it, then inspect `processing_log` and `validation_results` first” note attached.
 
 ---
 
-###  Error & Logging Layer
+## High-level flow
 
-Captures failed records and pipeline execution details.
+```mermaid
+flowchart TD
 
-- customers_errors  
-- errors_stage  
-- validation_results  
-- processing_log  
+    A["📂 CSVs arrive in Blob Storage<br/>orders<br/>customers<br/>products<br/>inventory<br/>shipping"]
 
----
+    B["⚡ Event Grid<br/>Blob Created Event"]
 
-###  Analytics Layer (Gold / Business Ready)
+    C["📬 Azure Storage Queue<br/>Buffered Event Message"]
 
-Final business-level aggregated tables for reporting and dashboards.
+    D["🧱 Databricks Loader Tasks<br/>01–05 stage_load notebooks"]
 
-- customer_analytics  
-- product_analytics  
-- category_analysis  
-- segment_analysis  
-- seasonal_analysis  
-- analytics_summary  
+    E1["orders<br/>stage"]
+    E2["customers<br/>stage"]
+    E3["products<br/>stage"]
+    E4["inventory<br/>stage"]
+    E5["shipping<br/>stage"]
 
+    F["06_data_validation<br/>Cross-feed integrity checks"]
 
----
+    G["07_data_enrichment<br/>Analytics-ready joins<br/>Derived attributes"]
 
-##  Data Flow Mapping
+    H["08_final_merge_operation<br/>SCD Type 2 Merge"]
 
-```text
-ADLS (Source Data)
-      │
-      ▼
-Stage Tables
-(customers_stage, orders_stage, ...)
-      │
-      ▼
-Target Tables
-(customers_target, orders_target, enriched_orders)
-      │
-      ├──────────────► Error Tables (validation failures)
-      │
-      ▼
-Analytics Tables (Gold Layer)
-(customer_analytics, product_analytics, etc.)
+    A -->|"Blob Created"| B
+    B --> C
+    C -->|"Queue Trigger"| D
+
+    D --> E1
+    D --> E2
+    D --> E3
+    D --> E4
+    D --> E5
+
+    E1 --> F
+    E2 --> F
+    E3 --> F
+    E4 --> F
+    E5 --> F
+
+    F --> G
+    G --> H
+
+    %% Styling
+    classDef storage fill:#E3F2FD,stroke:#1E88E5,color:#000,stroke-width:2px;
+    classDef event fill:#FFF8E1,stroke:#F9A825,color:#000,stroke-width:2px;
+    classDef queue fill:#E8F5E9,stroke:#43A047,color:#000,stroke-width:2px;
+    classDef loader fill:#F3E5F5,stroke:#8E24AA,color:#000,stroke-width:2px;
+    classDef stage fill:#ECEFF1,stroke:#607D8B,color:#000,stroke-width:2px;
+    classDef process fill:#FFF3E0,stroke:#FB8C00,color:#000,stroke-width:2px;
+    classDef final fill:#EDE7F6,stroke:#5E35B1,color:#000,stroke-width:2px;
+
+    class A storage;
+    class B event;
+    class C queue;
+    class D loader;
+    class E1,E2,E3,E4,E5 stage;
+    class F,G process;
+    class H final;
 ```
 
 
+Notes:
 
+- `01`–`05` are ingestion and staging work. They are intentionally lightweight and isolated.
+- `06` validates across feeds. It must run after all staged tables exist.
+- `07` only runs once the data is structurally correct and consistent enough for analytics.
+- `08` is a write-heavy merge stage; it should be the last step.
 
+---
 
- 
+## What each notebook does
 
-   
+### `01_orders_stage_load.ipynb`
+
+Loads orders from blob CSV into a Delta stage table.
+
+Key behaviour:
+
+- explicit schema, no schema inference
+- `batch_id` and `processed_timestamp` added
+- valid rows written to `orders_stage`
+- invalid rows written to an error table with reason codes
+- source file moved to `archive/`
+
+Why this exists:
+
+The staging layer is the first point where raw CSV becomes structured data. It also ensures bad rows are quarantined rather than silently dropped.
+
+### `02_customers_stage_load.ipynb`
+
+Loads customer records and enriches them with simple lifecycle segments.
+
+What it checks:
+
+- `customer_id`, `email`, `phone` must be present
+- date of birth cannot be in the future
+- email pattern sanity
+
+What it derives:
+
+- age segment (Gen Z / Millennial / Gen X / Boomer+)
+- customer lifecycle stage (New / Active / Established)
+
+### `03_products_stage_load.ipynb`
+
+Parses product metadata and computes stock/lifecycle indicators.
+
+What it does:
+
+- validates `product_id` and `price`
+- parses dimensions from `LxWxH`
+- computes volume, density, and price segment
+- flags discontinued or low-stock products
+
+### `04_inventory_stage_load.ipynb`
+
+Ingests inventory snapshots and enforces stock consistency.
+
+Checks include:
+
+- `inventory_id` is present
+- quantities are non-negative
+- stock utilization is calculated
+- overdue audits are flagged
+
+### `05_ShippingData_Stage_Load.ipynb`
+
+Loads shipping records and compares actual delivery performance.
+
+Enrichments include:
+
+- on-time / slightly delayed / delayed labels
+- cost per kilogram
+- validation of shipping cost and weight
+
+### `06_data_validation.ipynb`
+
+This notebook is the most important quality gate.
+
+It does not just validate one feed. It validates the relationship between all five feeds.
+
+Checks include:
+
+- orphan orders / missing customers
+- orders linked to missing products
+- shipping records without matching orders
+- product records never ordered
+- price mismatches versus product list prices
+- time-of-day and order amount sanity checks
+
+It writes results to `validation_results` and publishes a pass/fail flag for the next task.
+
+### `07_data_enrichment.ipynb`
+
+Joins the five staged feeds into analytics-ready outputs.
+
+Outputs include:
+
+- `enriched_orders`
+- `customer_analytics`
+- `product_analytics`
+
+This notebook is where business context is added: margins, lifecycle labels, customer segments, product performance tiers.
+
+### `08_final_merge_operation.ipynb`
+
+Performs the SCD2 merge into target tables.
+
+The process is:
+
+1. detect changed rows
+2. expire current versions (`is_current = false`)
+3. append new versions with `effective_date`
+4. keep full history in the same table
+
+This is the final commit point for the pipeline.
+
+---
+
+## Why this design
+
+I chose explicit staging because it makes debugging and retries easier.
+
+If a feed fails in `02`, I can fix the CSV and re-run only that notebook. I don't have to rerun the entire pipeline from raw file ingestion.
+
+Validation is separate because the cross-feed checks are not the same thing as row-level schema validation. A row can be internally valid and still be bogus if it points at the wrong customer or product.
+
+The merge stage preserves row history instead of overwriting it, which is the safer choice when dimensions change over time.
+
+---
+
+## Architecture sketch
+```mermaid
+flowchart TD
+
+    A["📦 Azure Blob Storage<br/>(Landing)"]
+    B["⚡ Event Grid / Storage Queue"]
+    C["🚀 Databricks Loader Job"]
+
+    N1["01 Orders"]
+    N2["02 Customers"]
+    N3["03 Products"]
+    N4["04 Inventory"]
+    N5["05 Shipping"]
+
+    D["📂 Stage Tables + Archive"]
+
+    E["06_data_validation"]
+    F["07_data_enrichment"]
+    G["08_final_merge_operation<br/>SCD Type 2"]
+
+    A -->|"CSV Arrival"| B
+    B -->|"Queue Pull"| C
+
+    C --> N1
+    C --> N2
+    C --> N3
+    C --> N4
+    C --> N5
+
+    N1 --> D
+    N2 --> D
+    N3 --> D
+    N4 --> D
+    N5 --> D
+
+    D --> E
+    E --> F
+    F --> G
+```
+### Architecture reference
+
+![event-driven architecture](./files/architecture-diagram.svg)
+
+![Azure portal reference](./files/original-azure-diagram.jpg)
+
+![alternative architecture sketch](./files/architecture_diagram.jpg)
+
+### Pipeline flow and runtime
+
+![pipeline DAG](./files/pipeline-dag.svg)
+
+![Databricks job graph](./files/databricks-job-graph.png)
+
+![workflow visual](./files/worklflow.png)
+
+### Execution evidence
+
+![enrichment summary](./files/analytics-summary-run.png)
+
+![final merge output](./files/final-merge-run.png)
+
+![final output](./files/final_output.png)
+
+![metric screenshot](./files/images/metric.png)
+
+### Security and access
+
+![IAM role assignments](./files/iam-role-assignments.jpeg)
+
+---
+
+## Operations and troubleshooting
+
+What to check first after a failed run:
+
+- `processing_log` for the notebook that failed
+- `validation_results` for high-severity rows
+- whether the source CSV was archived successfully
+- whether the queue message was processed more than once
+- whether the target table merge step has partially updated rows
+
+A common mistake:
+
+The job currently logs validation results but does not stop on medium or low severity automatically. That means a run can continue even when the data is not ideal, so the engineer should inspect the validation table before trusting downstream analytics.
+
+If you need a quick recovery path:
+
+- fix the source file in landing
+- re-run only the failed loader notebook if the issue is at ingestion
+- if the issue is a cross-feed mismatch, fix the table or source file and re-run `06_data_validation` then `07_data_enrichment`
+- only re-run `08_final_merge_operation` when the upstream feed is stable and the target state is understood
+
+---
+
+## File layout from this README
+
+- `01_orders_stage_load.ipynb`
+- `02_customers_stage_load.ipynb`
+- `03_products_stage_load.ipynb`
+- `04_inventory_stage_load.ipynb`
+- `05_ShippingData_Stage_Load.ipynb`
+- `06_data_validation.ipynb`
+- `07_data_enrichment.ipynb`
+- `08_final_merge_operation.ipynb`
+- `architecture-diagram.svg`
+- `pipeline-dag.svg`
+- `original-azure-diagram.jpg`
+- `databricks-job-graph.png`
+- `analytics-summary-run.png`
+- `final-merge-run.png`
+- `iam-role-assignments.jpeg`
+
+---
+
+## What the next engineer should take away
+
+- The most important tables to inspect are `processing_log` and `validation_results`.
+- The notebook order is intentional: stage -> validate -> enrich -> merge.
+- This repo is structured for handoff, not for experimentation. If you change the pipeline order or merge semantics, document it here.
+- The next improvement would be turning `validation_results` into a gating mechanism rather than passive logging.
+
+*This README is written as a practical handoff note, not a polished external summary.*
