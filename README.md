@@ -2,7 +2,7 @@
 
 A pragmatic event-driven data pipeline for ecommerce CSV feeds, built to run in Azure Databricks with Delta Lake staging, validation, enrichment, and SCD2 history.
 
-This repo is the handoff document for a pipeline that is meant to be run, observed, and debugged by another engineer. It is not marketing copy — it is a map of how the pipeline is wired, where data quality is enforced, and what to watch for after a run.
+This repo is the handoff document for a pipeline that is meant to be run, observed, and debugged by another engineer. It is not marketing copy —it is a map of how the pipeline is wired, where data quality is enforced, and what to watch for after a run.
 
 ---
 
@@ -24,53 +24,125 @@ This is the kind of pipeline I would hand over with a “run it, then inspect `p
 
 ## High-level flow
 
-           ┌─────────────────────┐
-           │  CSVs arrive in Blob │
-           │  (orders, customers, │
-           │   products, inventory,
-           │   shipping)          │
-           └─────────┬───────────┘
-                     │
-                     │ blob-created event
-                     ▼
-      ╭──────────────────────────────────╮
-      │ Event Grid → Storage Queue       │
-      │ (single event, buffered message) │
-      ╰──────────────────────────────────╯
-                     │
-                     │ queue poll / task trigger
-                     ▼
-      ╭──────────────────────────────╮
-      │ Databricks loader tasks       │
-      │ 01–05 stage_load notebooks    │
-      ╰──────────────────────────────╯
-              │     │     │     │     │
-              │     │     │     │     │
-              ▼     ▼     ▼     ▼     ▼
-    ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐
-    │ orders  │ │customers│ │products │ │inventory│ │shipping │
-    │ stage   │ │ stage   │ │ stage   │ │ stage   │ │ stage   │
-    └─────────┘ └─────────┘ └─────────┘ └─────────┘ └─────────┘
-              │
-              │ all feeds landed and typed
-              ▼
-      ╭──────────────────────────────╮
-      │ 06_data_validation           │
-      │ cross-feed integrity checks  │
-      ╰──────────────────────────────╯
-              │
-              ▼
-      ╭──────────────────────────────╮
-      │ 07_data_enrichment           │
-      │ analytics-ready joins +      │
-      │ derived attributes           │
-      ╰──────────────────────────────╯
-              │
-              ▼
-      ╭──────────────────────────────╮
-      │ 08_final_merge_operation     │
-      │ SCD2 merge to target         │
-      ╰──────────────────────────────╯
+         ```svg
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="980" viewBox="0 0 980 980">
+  <defs>
+    <style>
+      .box {
+        fill: #ffffff;
+        stroke: #333333;
+        stroke-width: 2;
+        rx: 10;
+        ry: 10;
+      }
+      .title {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        fill: #222;
+      }
+      .text {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 15px;
+        fill: #444;
+      }
+      .arrow {
+        stroke: #444;
+        stroke-width: 2.5;
+        fill: none;
+        marker-end: url(#arrowhead);
+      }
+    </style>
+
+    <marker id="arrowhead"
+            markerWidth="10"
+            markerHeight="7"
+            refX="8"
+            refY="3.5"
+            orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#444"/>
+    </marker>
+  </defs>
+
+  <!-- Top -->
+  <rect class="box" x="280" y="20" width="420" height="95"/>
+  <text class="title" x="490" y="48" text-anchor="middle">CSVs arrive in Blob</text>
+  <text class="text" x="490" y="72" text-anchor="middle">orders, customers, products,</text>
+  <text class="text" x="490" y="92" text-anchor="middle">inventory, shipping</text>
+
+  <line class="arrow" x1="490" y1="115" x2="490" y2="150"/>
+  <text class="text" x="510" y="138">blob-created event</text>
+
+  <!-- Event Grid -->
+  <rect class="box" x="260" y="150" width="460" height="85"/>
+  <text class="title" x="490" y="180" text-anchor="middle">Event Grid → Storage Queue</text>
+  <text class="text" x="490" y="205" text-anchor="middle">Single event, buffered message</text>
+
+  <line class="arrow" x1="490" y1="235" x2="490" y2="275"/>
+  <text class="text" x="510" y="260">queue poll / task trigger</text>
+
+  <!-- Loader -->
+  <rect class="box" x="270" y="275" width="440" height="90"/>
+  <text class="title" x="490" y="305" text-anchor="middle">Databricks Loader Tasks</text>
+  <text class="text" x="490" y="330" text-anchor="middle">01–05 stage_load notebooks</text>
+
+  <!-- Vertical arrows -->
+  <line class="arrow" x1="220" y1="365" x2="220" y2="430"/>
+  <line class="arrow" x1="355" y1="365" x2="355" y2="430"/>
+  <line class="arrow" x1="490" y1="365" x2="490" y2="430"/>
+  <line class="arrow" x1="625" y1="365" x2="625" y2="430"/>
+  <line class="arrow" x1="760" y1="365" x2="760" y2="430"/>
+
+  <!-- Stage Boxes -->
+  <rect class="box" x="155" y="430" width="130" height="75"/>
+  <text class="title" x="220" y="458" text-anchor="middle">Orders</text>
+  <text class="text" x="220" y="482" text-anchor="middle">Stage</text>
+
+  <rect class="box" x="290" y="430" width="130" height="75"/>
+  <text class="title" x="355" y="458" text-anchor="middle">Customers</text>
+  <text class="text" x="355" y="482" text-anchor="middle">Stage</text>
+
+  <rect class="box" x="425" y="430" width="130" height="75"/>
+  <text class="title" x="490" y="458" text-anchor="middle">Products</text>
+  <text class="text" x="490" y="482" text-anchor="middle">Stage</text>
+
+  <rect class="box" x="560" y="430" width="130" height="75"/>
+  <text class="title" x="625" y="458" text-anchor="middle">Inventory</text>
+  <text class="text" x="625" y="482" text-anchor="middle">Stage</text>
+
+  <rect class="box" x="695" y="430" width="130" height="75"/>
+  <text class="title" x="760" y="458" text-anchor="middle">Shipping</text>
+  <text class="text" x="760" y="482" text-anchor="middle">Stage</text>
+
+  <!-- Merge -->
+  <line class="arrow" x1="490" y1="505" x2="490" y2="555"/>
+  <text class="text" x="510" y="540">All feeds landed and typed</text>
+
+  <!-- Validation -->
+  <rect class="box" x="280" y="555" width="420" height="85"/>
+  <text class="title" x="490" y="585" text-anchor="middle">06_data_validation</text>
+  <text class="text" x="490" y="610" text-anchor="middle">Cross-feed integrity checks</text>
+
+  <line class="arrow" x1="490" y1="640" x2="490" y2="685"/>
+
+  <!-- Enrichment -->
+  <rect class="box" x="280" y="685" width="420" height="90"/>
+  <text class="title" x="490" y="715" text-anchor="middle">07_data_enrichment</text>
+  <text class="text" x="490" y="740" text-anchor="middle">Analytics-ready joins +</text>
+  <text class="text" x="490" y="760" text-anchor="middle">Derived attributes</text>
+
+  <line class="arrow" x1="490" y1="775" x2="490" y2="820"/>
+
+  <!-- Final -->
+  <rect class="box" x="280" y="820" width="420" height="90"/>
+  <text class="title" x="490" y="850" text-anchor="middle">08_final_merge_operation</text>
+  <text class="text" x="490" y="875" text-anchor="middle">SCD Type 2 Merge to Target</text>
+
+</svg>
+```
+
+You can save this as `pipeline.svg` and open it in any browser or import it directly into Figma, Excalidraw (as SVG), PowerPoint, or your README. It is fully editable since it's pure SVG.
+
 
 Notes:
 
