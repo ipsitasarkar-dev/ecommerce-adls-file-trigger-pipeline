@@ -216,60 +216,44 @@ The merge stage preserves row history instead of overwriting it, which is the sa
 ---
 
 ## Architecture sketch
-
-           ```mermaid
+```mermaid
 flowchart TD
 
-    A["📦 Azure Blob Storage<br/>(Landing Zone)"]
+    A["📦 Azure Blob Storage<br/>(Landing)"]
+    B["⚡ Event Grid / Storage Queue"]
+    C["🚀 Databricks Loader Job"]
 
-    B["⚡ Event Grid / Azure Storage Queue<br/>Buffer File Event"]
+    N1["01 Orders"]
+    N2["02 Customers"]
+    N3["03 Products"]
+    N4["04 Inventory"]
+    N5["05 Shipping"]
 
-    C["🚀 Databricks Job<br/>Triggers Loader Notebooks<br/>01–05 (One Notebook per Feed)"]
+    D["📂 Stage Tables + Archive"]
 
-    D["📂 Load CSVs<br/>→ Stage Tables<br/>→ Archive Files"]
+    E["06_data_validation"]
+    F["07_data_enrichment"]
+    G["08_final_merge_operation<br/>SCD Type 2"]
 
-    E["✅ 06_data_validation<br/>Cross-feed Integrity Checks"]
-
-    F["🔄 07_data_enrichment<br/>Build Analytics-ready Outputs"]
-
-    G["📊 08_final_merge_operation<br/>SCD Type 2 History Writes"]
-
-    A -->|"CSV File Arrival"| B
+    A -->|"CSV Arrival"| B
     B -->|"Queue Pull"| C
-    C --> D
+
+    C --> N1
+    C --> N2
+    C --> N3
+    C --> N4
+    C --> N5
+
+    N1 --> D
+    N2 --> D
+    N3 --> D
+    N4 --> D
+    N5 --> D
+
     D --> E
     E --> F
     F --> G
-
-    %% Styling
-    classDef storage fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px,color:#000;
-    classDef event fill:#FFF8E1,stroke:#F9A825,stroke-width:2px,color:#000;
-    classDef compute fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,color:#000;
-    classDef stage fill:#ECEFF1,stroke:#607D8B,stroke-width:2px,color:#000;
-    classDef process fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px,color:#000;
-    classDef final fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px,color:#000;
-
-    class A storage;
-    class B event;
-    class C compute;
-    class D stage;
-    class E,F process;
-    class G final;
 ```
-Notes on the sketch:
-
-- the blob event does not go directly to Databricks; it is buffered in a queue first.
-- stage tables are the first durable checkpoint.
-- validation is the first place where all feeds are compared.
-- enrichment is where analytical context is created.
-- merge is the final durable write.
-
----
-
-## Key diagrams and screenshots
-
-The image assets are stored alongside this README in `files/`, with additional visual references in the sibling `images/` directory.
-
 ### Architecture reference
 
 ![event-driven architecture](./files/architecture-diagram.svg)
