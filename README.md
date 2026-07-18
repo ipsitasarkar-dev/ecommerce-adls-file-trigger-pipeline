@@ -24,8 +24,65 @@ This is the kind of pipeline I would hand over with a “run it, then inspect `p
 
 ## High-level flow
 
- 
-https://chatgpt.com/s/t_6a5b95ced0808191b5d297a74ae606a7
+```mermaid
+flowchart TD
+
+    A["📂 CSVs arrive in Blob Storage<br/>orders<br/>customers<br/>products<br/>inventory<br/>shipping"]
+
+    B["⚡ Event Grid<br/>Blob Created Event"]
+
+    C["📬 Azure Storage Queue<br/>Buffered Event Message"]
+
+    D["🧱 Databricks Loader Tasks<br/>01–05 stage_load notebooks"]
+
+    E1["orders<br/>stage"]
+    E2["customers<br/>stage"]
+    E3["products<br/>stage"]
+    E4["inventory<br/>stage"]
+    E5["shipping<br/>stage"]
+
+    F["06_data_validation<br/>Cross-feed integrity checks"]
+
+    G["07_data_enrichment<br/>Analytics-ready joins<br/>Derived attributes"]
+
+    H["08_final_merge_operation<br/>SCD Type 2 Merge"]
+
+    A -->|"Blob Created"| B
+    B --> C
+    C -->|"Queue Trigger"| D
+
+    D --> E1
+    D --> E2
+    D --> E3
+    D --> E4
+    D --> E5
+
+    E1 --> F
+    E2 --> F
+    E3 --> F
+    E4 --> F
+    E5 --> F
+
+    F --> G
+    G --> H
+
+    %% Styling
+    classDef storage fill:#E3F2FD,stroke:#1E88E5,color:#000,stroke-width:2px;
+    classDef event fill:#FFF8E1,stroke:#F9A825,color:#000,stroke-width:2px;
+    classDef queue fill:#E8F5E9,stroke:#43A047,color:#000,stroke-width:2px;
+    classDef loader fill:#F3E5F5,stroke:#8E24AA,color:#000,stroke-width:2px;
+    classDef stage fill:#ECEFF1,stroke:#607D8B,color:#000,stroke-width:2px;
+    classDef process fill:#FFF3E0,stroke:#FB8C00,color:#000,stroke-width:2px;
+    classDef final fill:#EDE7F6,stroke:#5E35B1,color:#000,stroke-width:2px;
+
+    class A storage;
+    class B event;
+    class C queue;
+    class D loader;
+    class E1,E2,E3,E4,E5 stage;
+    class F,G process;
+    class H final;
+```
 
 
 Notes:
