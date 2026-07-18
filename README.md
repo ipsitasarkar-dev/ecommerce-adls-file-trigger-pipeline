@@ -217,44 +217,45 @@ The merge stage preserves row history instead of overwriting it, which is the sa
 
 ## Architecture sketch
 
-           ┌─────────────────────────────┐
-           │ Azure Blob Storage (landing) │
-           └───────────┬─────────────────┘
-                       │ CSV file arrival
-                       ▼
-            ┌───────────────────────────┐
-            │ Event Grid / Storage Queue │
-            │ buffer the file event      │
-            └───────────┬───────────────┘
-                        │ queue pull
-                        ▼
-       ╭────────────────────────────────────────╮
-       │ Databricks job starts loader notebooks │
-       │ 01–05: one notebook per feed          │
-       ╰────────────────────────────────────────╯
-                    │  │  │  │  │
-                    │  │  │  │  │
-                    ▼  ▼  ▼  ▼  ▼
-              load -> stage tables and archives
-                    │
-                    ▼
-       ╭──────────────────────────────────╮
-       │ 06_data_validation                │
-       │ cross-feed integrity checks      │
-       ╰──────────────────────────────────╯
-                    │
-                    ▼
-       ╭──────────────────────────────────╮
-       │ 07_data_enrichment                │
-       │ build analytics-ready outputs    │
-       ╰──────────────────────────────────╯
-                    │
-                    ▼
-       ╭──────────────────────────────────╮
-       │ 08_final_merge_operation          │
-       │ SCD2 history writes               │
-       ╰──────────────────────────────────╯
+           ```mermaid
+flowchart TD
 
+    A["📦 Azure Blob Storage<br/>(Landing Zone)"]
+
+    B["⚡ Event Grid / Azure Storage Queue<br/>Buffer File Event"]
+
+    C["🚀 Databricks Job<br/>Triggers Loader Notebooks<br/>01–05 (One Notebook per Feed)"]
+
+    D["📂 Load CSVs<br/>→ Stage Tables<br/>→ Archive Files"]
+
+    E["✅ 06_data_validation<br/>Cross-feed Integrity Checks"]
+
+    F["🔄 07_data_enrichment<br/>Build Analytics-ready Outputs"]
+
+    G["📊 08_final_merge_operation<br/>SCD Type 2 History Writes"]
+
+    A -->|"CSV File Arrival"| B
+    B -->|"Queue Pull"| C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+
+    %% Styling
+    classDef storage fill:#E3F2FD,stroke:#1E88E5,stroke-width:2px,color:#000;
+    classDef event fill:#FFF8E1,stroke:#F9A825,stroke-width:2px,color:#000;
+    classDef compute fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,color:#000;
+    classDef stage fill:#ECEFF1,stroke:#607D8B,stroke-width:2px,color:#000;
+    classDef process fill:#FFF3E0,stroke:#FB8C00,stroke-width:2px,color:#000;
+    classDef final fill:#EDE7F6,stroke:#5E35B1,stroke-width:2px,color:#000;
+
+    class A storage;
+    class B event;
+    class C compute;
+    class D stage;
+    class E,F process;
+    class G final;
+```
 Notes on the sketch:
 
 - the blob event does not go directly to Databricks; it is buffered in a queue first.
